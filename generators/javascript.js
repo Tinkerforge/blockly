@@ -108,6 +108,8 @@ Blockly.JavaScript.ORDER_NONE = 99;          // (...)
  * @param {!Blockly.Workspace} workspace Workspace to generate code from.
  */
 Blockly.JavaScript.init = function(workspace) {
+  // Initialize unique number container with initial number for making identifiers in the code unique
+  Blockly.JavaScript.tfUniqueNumber_ = 1;
   // Create a dictionary of definitions to be printed before the code.
   Blockly.JavaScript.definitions_ = Object.create(null);
   // Create a dictionary mapping desired function names in definitions_
@@ -132,6 +134,17 @@ Blockly.JavaScript.init = function(workspace) {
 };
 
 /**
+ * Get unique number.
+ * @param {null}.
+ * @return {string} Unique number.
+ */
+Blockly.JavaScript.tfGetUniqueNumber = function() {
+  var uniqueNumber = Blockly.JavaScript.tfUniqueNumber_;
+  Blockly.JavaScript.tfUniqueNumber_ = Blockly.JavaScript.tfUniqueNumber_ + 1;
+  return String(uniqueNumber);
+};
+
+/**
  * Prepend the generated code with the variable definitions.
  * @param {string} code Generated code.
  * @return {string} Completed code.
@@ -146,7 +159,25 @@ Blockly.JavaScript.finish = function(code) {
   delete Blockly.JavaScript.definitions_;
   delete Blockly.JavaScript.functionNames_;
   Blockly.JavaScript.variableDB_.reset();
-  return definitions.join('\n\n') + '\n\n\n' + code;
+  if (code === '') {
+    return code;
+  }
+  var codePrepend_ = 'var _tfGlobalVariables = {};\n'+
+'var _ipconCache = {};\n'+
+'var _deviceCache = {};\n'+
+'var _iteratorMain;\n'+
+'\n'+
+'function _errorHandler(e) {\n'+
+"\tpostMessage('ERROR: ' + String(e)+'\\n');\n"+
+'}\n'+
+'\n'+
+'function* main() {\n';
+
+  return  definitions.join('\n')+
+'\n'+
+codePrepend_+
+Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)+
+'}\n\n_iteratorMain = main();\n_iteratorMain.next();\n';
 };
 
 /**
