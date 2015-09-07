@@ -89,6 +89,8 @@ Blockly.Python.PASS = '  pass\n';
  * @param {!Blockly.Workspace} workspace Workspace to generate code from.
  */
 Blockly.Python.init = function(workspace) {
+  // Check whether or not to append the python _cleanup() function
+  Blockly.Python.tfAppendCleanupCall_ = false;
   // Create a dictionary of definitions to be printed before the code.
   Blockly.Python.definitions_ = Object.create(null);
   // Create a dictionary mapping desired function names in definitions_
@@ -133,6 +135,9 @@ Blockly.Python.finish = function(code) {
   delete Blockly.Python.functionNames_;
   Blockly.Python.variableDB_.reset();
   var allDefs = imports.join('\n') + '\n\n' + definitions.join('\n\n');
+  if (Blockly.Python.tfAppendCleanupCall_) {
+    return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code + '\n_cleanup()\n';
+  }
   return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code;
 };
 
