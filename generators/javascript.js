@@ -162,7 +162,7 @@ Blockly.JavaScript.finish = function(code) {
   if (code === '') {
     return code;
   }
-  var codePrepend_ = 'var _tf_global_gariables = {};\n'+
+  var codePrepend_ = 'var _tf_global_variables = {};\n'+
 'var _ipcon_cache = {};\n'+
 'var _device_cache = {};\n'+
 'var _iterator_main;\n'+
