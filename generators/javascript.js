@@ -177,7 +177,7 @@ Blockly.JavaScript.finish = function(code) {
 '\n'+
 codePrepend_+
 Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)+
-'}\n\n_iterator_main = main();\n_iterator_main.next();\n';
+'  postMessage(String(TVPL_WORKER_CMD_END));\n}\n\n_iterator_main = main();\n_iterator_main.next();\n';
 };
 
 /**
