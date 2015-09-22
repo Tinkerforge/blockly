@@ -163,21 +163,30 @@ Blockly.JavaScript.finish = function(code) {
     return code;
   }
   var codePrepend_ = 'var _tf_global_variables = {};\n'+
+'var _tf_iterators = {};\n'+
 'var _ipcon_cache = {};\n'+
 'var _device_cache = {};\n'+
-'var _iterator_main;\n'+
 '\n'+
 'function _error_handler(e) {\n'+
-"\tpostMessage('ERROR: ' + String(e)+'\\n');\n"+
+"  postMessage('ERROR: ' + String(e)+'\\n');\n"+
+'}'
+
+var codeMain_ = '\nfunction* main() {\n  var self_iterator = _tf_iterators._main;\n\n';
+
+  return  codePrepend_+
+'\n'+
+definitions.join('\n')+
+codeMain_+
+Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)+
+'\n'+
+'  for (var k in _ipcon_cache) {\n'+
+'    _ipcon_cache[k].disconnect();\n'+
+'  }\n\n'+
+'  postMessage(String(TVPL_WORKER_CMD_END));\n'+
 '}\n'+
 '\n'+
-'function* main() {\n';
-
-  return  definitions.join('\n')+
-'\n'+
-codePrepend_+
-Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)+
-'  postMessage(String(TVPL_WORKER_CMD_END));\n}\n\n_iterator_main = main();\n_iterator_main.next();\n';
+'_tf_iterators._main = main();\n'+
+'_tf_iterators._main.next();\n';
 };
 
 /**
