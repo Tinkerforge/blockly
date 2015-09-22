@@ -171,7 +171,7 @@ Blockly.JavaScript.finish = function(code) {
 "  postMessage('ERROR: ' + String(e)+'\\n');\n"+
 '}'
 
-var codeMain_ = '\nfunction* main() {\n  var self_iterator = _tf_iterators._main;\n\n';
+var codeMain_ = '\nfunction* _main() {\n  var self_iterator = _tf_iterators._main;\n\n';
 
   return  codePrepend_+
 '\n'+
@@ -185,7 +185,7 @@ Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.
 '  postMessage(String(TVPL_WORKER_CMD_END));\n'+
 '}\n'+
 '\n'+
-'_tf_iterators._main = main();\n'+
+'_tf_iterators._main = _main();\n'+
 '_tf_iterators._main.next();\n';
 };
 
