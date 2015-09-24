@@ -53,7 +53,7 @@ Blockly.JavaScript['procedures_defreturn'] = function(block) {
     args[x] = Blockly.JavaScript.variableDB_.getName(block.arguments_[x],
         Blockly.Variables.NAME_TYPE);
   }
-  var code = 'function ' + funcName + '(' + args.join(', ') + ') {\n' +
+  var code = 'function* ' + funcName + '(' + args.join(', ') + ') {\n' +
       branch + returnValue + '}';
   code = Blockly.JavaScript.scrub_(block, code);
   Blockly.JavaScript.definitions_[funcName] = code;
@@ -74,7 +74,7 @@ Blockly.JavaScript['procedures_callreturn'] = function(block) {
     args[x] = Blockly.JavaScript.valueToCode(block, 'ARG' + x,
         Blockly.JavaScript.ORDER_COMMA) || 'null';
   }
-  var code = funcName + '(' + args.join(', ') + ')';
+  var code = 'yield* ' + funcName + '(' + args.join(', ') + ')';
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
@@ -87,7 +87,7 @@ Blockly.JavaScript['procedures_callnoreturn'] = function(block) {
     args[x] = Blockly.JavaScript.valueToCode(block, 'ARG' + x,
         Blockly.JavaScript.ORDER_COMMA) || 'null';
   }
-  var code = funcName + '(' + args.join(', ') + ');\n';
+  var code = 'yield* ' + funcName + '(' + args.join(', ') + ');\n';
   return code;
 };
 

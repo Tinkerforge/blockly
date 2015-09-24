@@ -162,16 +162,15 @@ Blockly.JavaScript.finish = function(code) {
   if (code === '') {
     return code;
   }
-  var codePrepend_ = 'var _tf_global_variables = {};\n'+
-'var _tf_iterators = {};\n'+
-'var _ipcon_cache = {};\n'+
+  var codePrepend_ = 'var _ipcon_cache = {};\n'+
 'var _device_cache = {};\n'+
+'var _iterator_main = null;\n'+
 '\n'+
 'function _error_handler(e) {\n'+
 "  postMessage('ERROR: ' + String(e)+'\\n');\n"+
 '}'
 
-var codeMain_ = '\nfunction* _main() {\n  var self_iterator = _tf_iterators._main;\n\n';
+var codeMain_ = '\nfunction* _main() {\n';
 
   return  codePrepend_+
 '\n'+
@@ -185,8 +184,8 @@ Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.
 '  postMessage(String(TVPL_WORKER_CMD_END));\n'+
 '}\n'+
 '\n'+
-'_tf_iterators._main = _main();\n'+
-'_tf_iterators._main.next();\n';
+'_iterator_main = _main();\n'+
+'_iterator_main.next();\n';
 };
 
 /**
