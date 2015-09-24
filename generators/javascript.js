@@ -180,8 +180,10 @@ Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.
 '\n'+
 '  for (var k in _ipcon_cache) {\n'+
 '    _ipcon_cache[k].disconnect();\n'+
-'  }\n\n'+
-'  postMessage(String(TVPL_WORKER_CMD_END));\n'+
+'  }\n'+
+'\n'+
+'  postMessage(workerProtocolSendMessage(WORKER_PROTOCOL_TYPE_COMMAND,\n'+
+'                                        WORKER_PROTOCOL_TYPE_DATA_COMMAND_END));\n'+
 '}\n'+
 '\n'+
 '_iterator_main = _main();\n'+
