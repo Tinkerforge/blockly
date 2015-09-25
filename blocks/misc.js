@@ -26,3 +26,26 @@ Blockly.Blocks['tinkerforge_misc_sleep'] = {
     this.setHelpUrl('');
   }
 };
+
+Blockly.Blocks['tinkerforge_misc_repeat_with_interval'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Keep repeating with');
+    this.appendValueInput('_REPEAT_INTERVAL_TIME_AMOUNT')
+        .setCheck('Number')
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([['Millisecond(s)', 'TIME_UNIT_MS'], ['Second(s)', 'TIME_UNIT_S']]), '_REPEAT_INTERVAL_TIME_UNIT');
+    this.appendDummyInput()
+        .appendField('interval');
+    this.appendStatementInput('_REPEAT_INTERVAL_STATEMENTS');
+    this.setPreviousStatement(true);
+    this.setNextStatement(false);
+    this.setColour(20);
+    this.setInputsInline(true);
+    this.setOutput(false);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setColour(20);
+    this.setHelpUrl('');
+  }
+};
