@@ -15,9 +15,6 @@ Blockly.Blocks['tinkerforge_misc_sleep'] = {
         .setCheck('Number');
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([['Millisecond(s)', 'TIME_UNIT_MS'], ['Second(s)', 'TIME_UNIT_S']]), '_TIME_UNIT');
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setColour(20);
     this.setInputsInline(true);
     this.setOutput(false);
     this.setPreviousStatement(true);
@@ -38,9 +35,6 @@ Blockly.Blocks['tinkerforge_misc_repeat_with_interval'] = {
     this.appendDummyInput()
         .appendField('interval');
     this.appendStatementInput('_REPEAT_INTERVAL_STATEMENTS');
-    this.setPreviousStatement(true);
-    this.setNextStatement(false);
-    this.setColour(20);
     this.setInputsInline(true);
     this.setOutput(false);
     this.setPreviousStatement(true);
