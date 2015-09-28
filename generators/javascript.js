@@ -167,8 +167,8 @@ Blockly.JavaScript.finish = function(code) {
 'var _iterator_main = null;\n'+
 '\n'+
 'function _error_handler(e) {\n'+
-'postMessage(workerProtocolSendMessage(WORKER_PROTOCOL_TYPE_MESSAGE,\n'+
-'                                      String(\'ERROR: \' + e + \'\\n\')));'+
+'  postMessage(workerProtocolSendMessage(WORKER_PROTOCOL_TYPE_MESSAGE,\n'+
+'                                        String(\'ERROR: \' + e + \'\\n\')));\n'+
 '}'
 
 var codeMain_ = '\nfunction* _main() {\n';
