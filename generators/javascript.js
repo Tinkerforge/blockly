@@ -166,6 +166,11 @@ Blockly.JavaScript.finish = function(code) {
 'var _device_cache = {};\n'+
 'var _iterator_main = null;\n'+
 '\n'+
+'function* _yielder() {\n'+
+'  setTimeout(function() {_iterator_main.next();}, 1);\n'+
+'  yield 1;\n'+
+'}\n'+
+'\n'+
 'function _cleanup() {\n'+
 '  for (var k in _ipcon_cache) {\n'+
 '    _ipcon_cache[k].disconnect();\n'+
@@ -185,10 +190,10 @@ definitions.join('\n')+
 codeMain_+
 Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)+
 '\n'+
+'\n'+
 '  _cleanup();\n'+
 '\n'+
-'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_COMMAND_WORKER_CODE_EXEC_END,\n'+
-'                                        null));\n'+
+'  yield 1;\n'+
 '}\n'+
 '\n'+
 '_iterator_main = _main();\n'+
