@@ -166,8 +166,14 @@ Blockly.JavaScript.finish = function(code) {
 'var _device_cache = {};\n'+
 'var _iterator_main = null;\n'+
 '\n'+
+'function _cleanup() {\n'+
+'  for (var k in _ipcon_cache) {\n'+
+'    _ipcon_cache[k].disconnect();\n'+
+'  }\n'+
+'}\n'+
+'\n'+
 'function _error_handler(e) {\n'+
-'  postMessage(workerProtocolSendMessage(WORKER_PROTOCOL_TYPE_MESSAGE,\n'+
+'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_COMMAND_WORKER_CODE_EXEC_ERROR,\n'+
 '                                        String(\'ERROR: \' + e + \'\\n\')));\n'+
 '}'
 
@@ -179,12 +185,10 @@ definitions.join('\n')+
 codeMain_+
 Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)+
 '\n'+
-'  for (var k in _ipcon_cache) {\n'+
-'    _ipcon_cache[k].disconnect();\n'+
-'  }\n'+
+'  _cleanup();\n'+
 '\n'+
-'  postMessage(workerProtocolSendMessage(WORKER_PROTOCOL_TYPE_COMMAND,\n'+
-'                                        WORKER_PROTOCOL_TYPE_DATA_COMMAND_END));\n'+
+'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_COMMAND_WORKER_CODE_EXEC_END,\n'+
+'                                        null));\n'+
 '}\n'+
 '\n'+
 '_iterator_main = _main();\n'+
