@@ -66,7 +66,7 @@ Blockly.JavaScript['controls_whileUntil'] = function(block) {
   var argument0 = Blockly.JavaScript.valueToCode(block, 'BOOL',
       until ? Blockly.JavaScript.ORDER_LOGICAL_NOT :
       Blockly.JavaScript.ORDER_NONE) || 'false';
-  var branch = Blockly.JavaScript.statementToCode(block, 'DO');
+  var branch = Blockly.JavaScript.statementToCode(block, 'DO') + '\n  yield* _yielder();\n';
   branch = Blockly.JavaScript.addLoopTrap(branch, block.id);
   if (until) {
     argument0 = '!' + argument0;

@@ -167,7 +167,7 @@ Blockly.JavaScript.finish = function(code) {
 'var _iterator_main = null;\n'+
 '\n'+
 'function* _yielder() {\n'+
-'  setTimeout(function() {_iterator_main.next();}, 1);\n'+
+'  setTimeout(function() {_iterator_main.next();}, 8);\n'+
 '  yield 1;\n'+
 '}\n'+
 '\n'+
@@ -189,7 +189,6 @@ var codeMain_ = '\nfunction* _main() {\n';
 definitions.join('\n')+
 codeMain_+
 Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)+
-'\n'+
 '\n'+
 '  _cleanup();\n'+
 '\n'+
