@@ -162,7 +162,9 @@ Blockly.JavaScript.finish = function(code) {
   if (code === '') {
     return code;
   }
-  var codePrepend_ = 'var _ipcon_cache = {};\n'+
+  var codePrepend_ = 'var handlerOnMessage = null;\n'+
+'var handlerOnError = null;\n'+
+'var _ipcon_cache = {};\n'+
 'var _device_cache = {};\n'+
 'var _iterator_main = null;\n'+
 '\n'+
@@ -177,8 +179,32 @@ Blockly.JavaScript.finish = function(code) {
 '  }\n'+
 '}\n'+
 '\n'+
+'function dispatchMessage(message) {\n'+
+'  var messageParsed = JSON.parse(message);\n'+
+'\n'+
+'  if (messageParsed.type !== null && workerProtocol.isNumber(messageParsed.type)) {\n'+
+'    switch(messageParsed.type) {\n'+
+'      case workerProtocol.TYPE_COMMAND_MASTER_CODE_EXEC_STOP:\n'+
+'        _cleanup();\n'+
+'        close();\n'+
+'    }\n'+
+'  }\n'+
+'}\n'+
+'\n'+
+'handlerOnMessage = function(e) {\n'+
+'  dispatchMessage(e.data);\n'+
+'}\n'+
+'\n'+
+'handlerOnError = function(e) {\n'+
+'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_COMMAND_WORKER_ERROR,\n'+
+'                                        String(e.message)));\n'+
+'}\n'+
+'\n'+
+'onmessage = handlerOnMessage;\n'+
+'onerror   = handlerOnError;\n'+
+'\n'+
 'function _error_handler(e) {\n'+
-'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_COMMAND_WORKER_CODE_EXEC_ERROR,\n'+
+'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_COMMAND_WORKER_ERROR,\n'+
 '                                        String(\'ERROR: \' + e + \'\\n\')));\n'+
 '}'
 
