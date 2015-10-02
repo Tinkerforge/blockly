@@ -168,7 +168,7 @@ Blockly.JavaScript.finish = function(code) {
 'var _device_cache = {};\n'+
 'var _iterator_main = null;\n'+
 '\n'+
-'function* _yielder() {\n'+
+'function *_yielder() {\n'+
 '  setTimeout(function() {_iterator_main.next();}, 8);\n'+
 '  yield 1;\n'+
 '}\n'+
@@ -208,7 +208,7 @@ Blockly.JavaScript.finish = function(code) {
 '                                        String(\'ERROR: \' + e + \'\\n\')));\n'+
 '}'
 
-var codeMain_ = '\nfunction* _main() {\n';
+var codeMain_ = '\nfunction *_main() {\n';
 
   return  codePrepend_+
 '\n'+

@@ -15,12 +15,12 @@ Blockly.JavaScript['tinkerforge_misc_sleep'] = function(block) {
     value_time_amount = value_time_amount * 1000;
   }
 
-  Blockly.JavaScript.definitions_['tinkerforge_misc_sleep'] = 'function* _tf_misc_sleep(duration) {\n'+
+  Blockly.JavaScript.definitions_['tinkerforge_misc_sleep'] = 'function *_tf_misc_sleep(duration) {\n'+
 '  setTimeout(function() { _iterator_main.next(); }, duration);\n'+
 '  yield 1;\n'+
 '}\n';
 
-  var code = 'yield* _tf_misc_sleep(' + String(value_time_amount) + ');\n';
+  var code = 'yield *_tf_misc_sleep(' + String(value_time_amount) + ');\n';
 
   return code;
 };
@@ -34,12 +34,12 @@ Blockly.JavaScript['tinkerforge_misc_repeat_with_interval'] = function(block) {
     value_repeat_interval_time_amount = value_repeat_interval_time_amount * 1000;
   }
 
-  Blockly.JavaScript.definitions_['tinkerforge_misc_sleep'] = 'function* _tf_misc_sleep(duration) {\n'+
+  Blockly.JavaScript.definitions_['tinkerforge_misc_sleep'] = 'function *_tf_misc_sleep(duration) {\n'+
 '  setTimeout(function() { _iterator_main.next(); }, duration);\n'+
 '  yield 1;\n'+
 '}\n';
 
-  branch = branch + '  yield* _tf_misc_sleep(' + String(value_repeat_interval_time_amount) + ');\n';
+  branch = branch + '  yield *_tf_misc_sleep(' + String(value_repeat_interval_time_amount) + ');\n';
 
   return 'while (true) {\n' + Blockly.JavaScript.addLoopTrap(branch, block.id) + '}\n';
 };
