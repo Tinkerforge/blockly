@@ -168,11 +168,6 @@ Blockly.JavaScript.finish = function(code) {
 'var _device_cache = {};\n'+
 'var _iterator_main = null;\n'+
 '\n'+
-'function *_yielder() {\n'+
-'  setTimeout(function() {_iterator_main.next();}, 32);\n'+
-'  yield 1;\n'+
-'}\n'+
-'\n'+
 'function _cleanup() {\n'+
 '  for (var k in _ipcon_cache) {\n'+
 '    _ipcon_cache[k].disconnect();\n'+
@@ -184,7 +179,7 @@ Blockly.JavaScript.finish = function(code) {
 '\n'+
 '  if (messageParsed.type !== null && workerProtocol.isNumber(messageParsed.type)) {\n'+
 '    switch(messageParsed.type) {\n'+
-'      case workerProtocol.TYPE_COMMAND_MASTER_CODE_EXEC_STOP:\n'+
+'      case workerProtocol.TYPE_REQUEST_STOP_EXECUTION:\n'+
 '        _cleanup();\n'+
 '        close();\n'+
 '    }\n'+
@@ -196,7 +191,7 @@ Blockly.JavaScript.finish = function(code) {
 '}\n'+
 '\n'+
 'handlerOnError = function(e) {\n'+
-'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_COMMAND_WORKER_ERROR,\n'+
+'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_RESPONSE_ERROR,\n'+
 '                                        String(e.message)));\n'+
 '}\n'+
 '\n'+
@@ -204,7 +199,7 @@ Blockly.JavaScript.finish = function(code) {
 'onerror   = handlerOnError;\n'+
 '\n'+
 'function _error_handler(e) {\n'+
-'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_COMMAND_WORKER_ERROR,\n'+
+'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_RESPONSE_ERROR,\n'+
 '                                        String(\'ERROR: \' + e + \'\\n\')));\n'+
 '}'
 

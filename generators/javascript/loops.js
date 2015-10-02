@@ -39,8 +39,12 @@ Blockly.JavaScript['controls_repeat_ext'] = function(block) {
     var repeats = Blockly.JavaScript.valueToCode(block, 'TIMES',
         Blockly.JavaScript.ORDER_ASSIGNMENT) || '0';
   }
+  Blockly.JavaScript.definitions_['tinkerforge_loops_yielder'] = 'function *_yielder() {\n'+
+'  setTimeout(function() {_iterator_main.next();}, 32);\n'+
+'  yield 1;\n'+
+'}\n';
   var branch = Blockly.JavaScript.statementToCode(block, 'DO');
-  branch = Blockly.JavaScript.addLoopTrap(branch, block.id) + '\n  yield* _yielder();\n';
+  branch = Blockly.JavaScript.addLoopTrap(branch, block.id) + '\n  yield *_yielder();\n';
   var code = '';
   var loopVar = Blockly.JavaScript.variableDB_.getDistinctName(
       'count', Blockly.Variables.NAME_TYPE);
@@ -66,7 +70,11 @@ Blockly.JavaScript['controls_whileUntil'] = function(block) {
   var argument0 = Blockly.JavaScript.valueToCode(block, 'BOOL',
       until ? Blockly.JavaScript.ORDER_LOGICAL_NOT :
       Blockly.JavaScript.ORDER_NONE) || 'false';
-  var branch = Blockly.JavaScript.statementToCode(block, 'DO') + '\n  yield* _yielder();\n';
+  Blockly.JavaScript.definitions_['tinkerforge_loops_yielder'] = 'function *_yielder() {\n'+
+'  setTimeout(function() {_iterator_main.next();}, 32);\n'+
+'  yield 1;\n'+
+'}\n';
+  var branch = Blockly.JavaScript.statementToCode(block, 'DO') + '\n  yield *_yielder();\n';
   branch = Blockly.JavaScript.addLoopTrap(branch, block.id);
   if (until) {
     argument0 = '!' + argument0;
@@ -85,7 +93,11 @@ Blockly.JavaScript['controls_for'] = function(block) {
   var increment = Blockly.JavaScript.valueToCode(block, 'BY',
       Blockly.JavaScript.ORDER_ASSIGNMENT) || '1';
   var branch = Blockly.JavaScript.statementToCode(block, 'DO');
-  branch = Blockly.JavaScript.addLoopTrap(branch, block.id) + '\n  yield* _yielder();\n';
+  Blockly.JavaScript.definitions_['tinkerforge_loops_yielder'] = 'function *_yielder() {\n'+
+'  setTimeout(function() {_iterator_main.next();}, 32);\n'+
+'  yield 1;\n'+
+'}\n';
+  branch = Blockly.JavaScript.addLoopTrap(branch, block.id) + '\n  yield *_yielder();\n';
   var code;
   if (Blockly.isNumber(argument0) && Blockly.isNumber(argument1) &&
       Blockly.isNumber(increment)) {
@@ -146,7 +158,11 @@ Blockly.JavaScript['controls_forEach'] = function(block) {
   var argument0 = Blockly.JavaScript.valueToCode(block, 'LIST',
       Blockly.JavaScript.ORDER_ASSIGNMENT) || '[]';
   var branch = Blockly.JavaScript.statementToCode(block, 'DO');
-  branch = Blockly.JavaScript.addLoopTrap(branch, block.id) + '\n  yield* _yielder();\n';
+  Blockly.JavaScript.definitions_['tinkerforge_loops_yielder'] = 'function *_yielder() {\n'+
+'  setTimeout(function() {_iterator_main.next();}, 32);\n'+
+'  yield 1;\n'+
+'}\n';
+  branch = Blockly.JavaScript.addLoopTrap(branch, block.id) + '\n  yield *_yielder();\n';
   var code = '';
   // Cache non-trivial values to variables to prevent repeated look-ups.
   var listVar = argument0;
