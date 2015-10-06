@@ -134,17 +134,6 @@ Blockly.JavaScript.init = function(workspace) {
 };
 
 /**
- * Get unique number.
- * @param {null}.
- * @return {string} Unique number.
- */
-Blockly.JavaScript.tfGetUniqueNumber = function() {
-  var uniqueNumber = Blockly.JavaScript.tfUniqueNumber_;
-  Blockly.JavaScript.tfUniqueNumber_ = Blockly.JavaScript.tfUniqueNumber_ + 1;
-  return String(uniqueNumber);
-};
-
-/**
  * Prepend the generated code with the variable definitions.
  * @param {string} code Generated code.
  * @return {string} Completed code.
