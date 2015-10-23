@@ -108,8 +108,6 @@ Blockly.JavaScript.ORDER_NONE = 99;          // (...)
  * @param {!Blockly.Workspace} workspace Workspace to generate code from.
  */
 Blockly.JavaScript.init = function(workspace) {
-  // Initialize unique number container with initial number for making identifiers in the code unique
-  Blockly.JavaScript.tfUniqueNumber_ = 1;
   // Create a dictionary of definitions to be printed before the code.
   Blockly.JavaScript.definitions_ = Object.create(null);
   // Create a dictionary mapping desired function names in definitions_
@@ -130,83 +128,69 @@ Blockly.JavaScript.init = function(workspace) {
         Blockly.JavaScript.variableDB_.getName(variables[i],
         Blockly.Variables.NAME_TYPE) + ';';
   }
+  defvars.unshift('var _worker_id = null;');
+  defvars.unshift('var _has_ipcon = false;');
+  defvars.unshift('var _ipcon = null;');
+  defvars.unshift('var _return_value = null;');
+  defvars.unshift('var _iterator_main = _main();');
   Blockly.JavaScript.definitions_['variables'] = defvars.join('\n');
 };
 
 /**
- * Prepend the generated code with the variable definitions.
+ * Prepare and return code dictionary.
  * @param {string} code Generated code.
- * @return {string} Completed code.
+ * @return {dictionary} Code and code components.
  */
 Blockly.JavaScript.finish = function(code) {
-  // Convert the definitions dictionary into a list.
-  var definitions = [];
-  for (var name in Blockly.JavaScript.definitions_) {
-    definitions.push(Blockly.JavaScript.definitions_[name]);
+  var implementationTopLevelBlocksArray = [];
+  var definitionsArray = [];
+  var dictReturn = {
+    'definitions': null,
+    'implementationTopLevelBlocks': null
+  };
+
+  if (code.length < 1) {
+    // Clean up temporary data.
+    delete Blockly.JavaScript.definitions_;
+    delete Blockly.JavaScript.functionNames_;
+    Blockly.JavaScript.variableDB_.reset();
+
+    return dictReturn;
   }
+
+  for (var definitionName in Blockly.JavaScript.definitions_) {
+    definitionsArray.push(Blockly.JavaScript.definitions_[definitionName]);
+  }
+  dictReturn.definitions = definitionsArray.join('\n');
+
+  for (var i = 0; i < code.length; i++) {
+    if (code[i] === null || code[i] === '' || code[i] === '\n' || code[i] === ' ') {
+      continue;
+    }
+
+    code[i] = 'onmessage = function (e) {\n'+
+'  _dispatch_message(e.data);\n'+
+'};\n'+
+'onerror = _error_handler;\n'+
+'function *_main() {\n' +
+'  ' + code[i] + '\n' +
+'  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_DONE, null));\n' +
+'}\n';
+
+    code[i] = [dictReturn.definitions, code[i]].join('\n');
+
+    implementationTopLevelBlocksArray.push(code[i]);
+  }
+
+  dictReturn.implementationTopLevelBlocks = implementationTopLevelBlocksArray;
   // Clean up temporary data.
   delete Blockly.JavaScript.definitions_;
   delete Blockly.JavaScript.functionNames_;
   Blockly.JavaScript.variableDB_.reset();
-  if (code === '') {
-    return code;
-  }
-  var codePrepend_ = 'var handlerOnMessage = null;\n'+
-'var handlerOnError = null;\n'+
-'var _ipcon_cache = {};\n'+
-'var _device_cache = {};\n'+
-'var _iterator_main = null;\n'+
-'\n'+
-'function _cleanup() {\n'+
-'  for (var k in _ipcon_cache) {\n'+
-'    _ipcon_cache[k].disconnect();\n'+
-'  }\n'+
-'}\n'+
-'\n'+
-'function dispatchMessage(message) {\n'+
-'  var messageParsed = JSON.parse(message);\n'+
-'\n'+
-'  if (messageParsed.type !== null && workerProtocol.isNumber(messageParsed.type)) {\n'+
-'    switch(messageParsed.type) {\n'+
-'      case workerProtocol.TYPE_REQUEST_STOP_EXECUTION:\n'+
-'        _cleanup();\n'+
-'        close();\n'+
-'    }\n'+
-'  }\n'+
-'}\n'+
-'\n'+
-'handlerOnMessage = function(e) {\n'+
-'  dispatchMessage(e.data);\n'+
-'}\n'+
-'\n'+
-'handlerOnError = function(e) {\n'+
-'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_RESPONSE_ERROR,\n'+
-'                                        String(e.message)));\n'+
-'}\n'+
-'\n'+
-'onmessage = handlerOnMessage;\n'+
-'onerror   = handlerOnError;\n'+
-'\n'+
-'function _error_handler(e) {\n'+
-'  postMessage(workerProtocol.getMessage(workerProtocol.TYPE_RESPONSE_ERROR,\n'+
-'                                        String(\'ERROR: \' + e + \'\\n\')));\n'+
-'}'
 
-var codeMain_ = '\nfunction *_main() {\n';
+  return dictReturn;
 
-  return  codePrepend_+
-'\n'+
-definitions.join('\n')+
-codeMain_+
-Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)+
-'\n'+
-'  _cleanup();\n'+
-'\n'+
-'  yield 1;\n'+
-'}\n'+
-'\n'+
-'_iterator_main = _main();\n'+
-'_iterator_main.next();\n';
+  //Blockly.JavaScript.prefixLines(/** @type {string} */ (code), Blockly.JavaScript.INDENT)
 };
 
 /**

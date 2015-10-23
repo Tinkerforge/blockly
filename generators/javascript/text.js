@@ -232,7 +232,8 @@ Blockly.JavaScript['text_print'] = function(block) {
       Blockly.JavaScript.ORDER_NONE) || '\'\'';
   //return 'window.alert(' + argument0 + ');\n';
   //return 'postMessage(String(' + argument0 + ')+\'\\n\');\n';
-  return 'postMessage(workerProtocol.getMessage(workerProtocol.TYPE_RESPONSE_CONSOLE_MESSAGE, String(' + argument0 + ' + \'\\n\')));\n';
+  return 'postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_MESSAGE_CONSOLE, String(' + argument0 + ' + \'\\n\')));\n';
+  //return 'console.log(String(' + argument0 + ' + \'\\n\'));\n';
 };
 
 Blockly.JavaScript['text_prompt_ext'] = function(block) {

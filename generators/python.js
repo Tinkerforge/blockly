@@ -119,8 +119,16 @@ Blockly.Python.init = function(workspace) {
  * @return {string} Completed code.
  */
 Blockly.Python.finish = function(code) {
+  var dictReturn = {
+    'dictVariables': null,
+    'definitions': null,
+    'implementationTopLevelBlocks': null
+  };
+
+  return dictReturn;
+
   // Convert the definitions dictionary into a list.
-  var imports = [];
+  /*var imports = [];
   var definitions = [];
   for (var name in Blockly.Python.definitions_) {
     var def = Blockly.Python.definitions_[name];
@@ -138,7 +146,7 @@ Blockly.Python.finish = function(code) {
   if (Blockly.Python.tfAppendCleanupCall_) {
     return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code + '\n_cleanup()\n';
   }
-  return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code;
+  return allDefs.replace(/\n\n+/g, '\n\n').replace(/\n*$/, '\n\n\n') + code;*/
 };
 
 /**
