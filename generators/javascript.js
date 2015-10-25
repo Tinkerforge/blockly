@@ -179,7 +179,7 @@ Blockly.JavaScript.finish = function(code) {
 '  catch(e) {\n'+
 '    _error_handler(String(e));\n'+
 '    return;\n'+
-'  }}\n'+
+'  }\n'+
 '\n'+
 '  if (message_parsed.type !== null && workerProtocol.isNumber(message_parsed.type)) {\n'+
 '    switch(message_parsed.type) {\n'+
