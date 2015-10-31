@@ -43,5 +43,5 @@ Blockly.JavaScript['variables_set'] = function(block) {
   var varName = Blockly.JavaScript.variableDB_.getName(
       block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
   //return 'var ' + varName + ' = ' + argument0 + ';\n';
-  return 'postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SET_VARIABLE, \'' + varName + ' = ' + argument0 + ';\')); yield 1;';
+  return 'postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SET_VARIABLE, \'' + varName + ' = ' + argument0 + '\')); yield 1;';
 };

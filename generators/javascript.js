@@ -113,6 +113,7 @@ Blockly.JavaScript.init = function(workspace) {
   // Create a dictionary mapping desired function names in definitions_
   // to actual function names (to avoid collisions with user functions).
   Blockly.JavaScript.functionNames_ = Object.create(null);
+  Blockly.JavaScript.dictVariables_ = '';
 
   if (!Blockly.JavaScript.variableDB_) {
     Blockly.JavaScript.variableDB_ =
@@ -122,17 +123,21 @@ Blockly.JavaScript.init = function(workspace) {
   }
 
   var defvars = [];
+  var dictVariables = {};
   var variables = Blockly.Variables.allVariables(workspace);
+
+  if (variables.length > 0) {
+    Blockly.JavaScript.dictVariables_ = 'var _dictVariables = {};\n';
+  }
+
   for (var i = 0; i < variables.length; i++) {
-    defvars[i] = 'var ' +
-        Blockly.JavaScript.variableDB_.getName(variables[i],
-        Blockly.Variables.NAME_TYPE) + ';';
+    var varName = String(Blockly.JavaScript.variableDB_.getName(variables[i], Blockly.Variables.NAME_TYPE));
+    defvars[i] = 'var ' + varName + ';';
+    Blockly.JavaScript.dictVariables_ = Blockly.JavaScript.dictVariables_ + '_dictVariables.' + varName + ' = null;\n';
   }
   defvars.unshift('var _worker_id = null;');
-  defvars.unshift('var _has_ipcon = false;');
-  defvars.unshift('var _ipcon = null;');
   defvars.unshift('var _return_value = null;');
-  defvars.unshift('var _iterator_main = _main();');
+  defvars.unshift('var _iterator_main = null;');
   Blockly.JavaScript.definitions_['variables'] = defvars.join('\n');
 };
 
@@ -146,7 +151,8 @@ Blockly.JavaScript.finish = function(code) {
   var definitionsArray = [];
   var dictReturn = {
     'definitions': null,
-    'implementationTopLevelBlocks': null
+    'implementationTopLevelBlocks': null,
+    'dictVariables': Blockly.JavaScript.dictVariables_
   };
 
   if (code.length < 1) {
@@ -184,7 +190,10 @@ Blockly.JavaScript.finish = function(code) {
 '  if (message_parsed.type !== null && workerProtocol.isNumber(message_parsed.type)) {\n'+
 '    switch(message_parsed.type) {\n'+
 '      case workerProtocol._TYPE_REQ_SUBWORKER_START:\n'+
-'        _worker_id = message_parsed.data;\n'+
+'        _worker_id = message_parsed.data.wid;\n'+
+'        for (k in message_parsed.data.dictv) {\n'+
+'          eval(k + \' = \' + JSON.stringify(message_parsed.data.dictv[k]));\n'+
+'        }\n'+
 '        _iterator_main.next();\n'+
 '        postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_START_ACK, null));\n'+
 '        break;\n'+
@@ -211,7 +220,8 @@ Blockly.JavaScript.finish = function(code) {
 'function *_main() {\n' +
 '  ' + code[i] + '\n' +
 '  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_DONE, null));\n' +
-'}\n';
+'}\n'+
+'_iterator_main = _main();\n';
 
     code[i] = [dictReturn.definitions, code[i]].join('\n');
 
