@@ -138,6 +138,7 @@ Blockly.JavaScript.init = function(workspace) {
   defvars.unshift('var _worker_id = null;');
   defvars.unshift('var _return_value = null;');
   defvars.unshift('var _iterator_main = null;');
+  defvars.unshift('var _codeButtonEnable = false;');
   Blockly.JavaScript.definitions_['variables'] = defvars.join('\n');
 };
 
@@ -190,6 +191,9 @@ Blockly.JavaScript.finish = function(code) {
 '  if (message_parsed.type !== null && workerProtocol.isNumber(message_parsed.type)) {\n'+
 '    switch(message_parsed.type) {\n'+
 '      case workerProtocol._TYPE_REQ_SUBWORKER_START:\n'+
+'         if (\'codeButtonEnable\' in message_parsed.data) {\n'+
+'           _codeButtonEnable = message_parsed.data.codeButtonEnable;\n'+
+'         }\n'+
 '        _worker_id = message_parsed.data.wid;\n'+
 '        for (k in message_parsed.data.dictv) {\n'+
 '          eval(k + \' = \' + JSON.stringify(message_parsed.data.dictv[k]));\n'+
@@ -219,7 +223,7 @@ Blockly.JavaScript.finish = function(code) {
 'onerror = _error_handler;\n'+
 'function *_main() {\n' +
 '  ' + code[i] + '\n' +
-'  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_DONE, null));\n' +
+'    postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_DONE, _codeButtonEnable));\n'+
 '}\n'+
 '_iterator_main = _main();\n';
 
