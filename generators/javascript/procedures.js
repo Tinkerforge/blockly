@@ -54,7 +54,7 @@ Blockly.JavaScript['procedures_defreturn'] = function(block) {
         Blockly.Variables.NAME_TYPE);
   }
   var code = 'function *' + funcName + '(' + args.join(', ') + ') {\n' +
-      branch + returnValue + '}\n';
+      branch + returnValue + '\n}\n';
   code = Blockly.JavaScript.scrub_(block, code);
   Blockly.JavaScript.definitions_[funcName] = code;
   //return null;
