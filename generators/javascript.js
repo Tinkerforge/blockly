@@ -126,9 +126,7 @@ Blockly.JavaScript.init = function(workspace) {
   var dictVariables = {};
   var variables = Blockly.Variables.allVariables(workspace);
 
-  if (variables.length > 0) {
-    Blockly.JavaScript.dictVariables_ = 'var _dictVariables = {};\n';
-  }
+  Blockly.JavaScript.dictVariables_ = 'var _dictVariables = {};\n';
 
   for (var i = 0; i < variables.length; i++) {
     var varName = String(Blockly.JavaScript.variableDB_.getName(variables[i], Blockly.Variables.NAME_TYPE));
@@ -140,42 +138,8 @@ Blockly.JavaScript.init = function(workspace) {
   defvars.unshift('var _iterator_main = null;');
   defvars.unshift('var _codeButtonEnable = false;');
   Blockly.JavaScript.definitions_['variables'] = defvars.join('\n');
-};
 
-/**
- * Prepare and return code dictionary.
- * @param {string} code Generated code.
- * @return {dictionary} Code and code components.
- */
-Blockly.JavaScript.finish = function(code) {
-  var implementationTopLevelBlocksArray = [];
-  var definitionsArray = [];
-  var dictReturn = {
-    'definitions': null,
-    'implementationTopLevelBlocks': null,
-    'dictVariables': Blockly.JavaScript.dictVariables_
-  };
-
-  if (code.length < 1) {
-    // Clean up temporary data.
-    delete Blockly.JavaScript.definitions_;
-    delete Blockly.JavaScript.functionNames_;
-    Blockly.JavaScript.variableDB_.reset();
-
-    return dictReturn;
-  }
-
-  for (var definitionName in Blockly.JavaScript.definitions_) {
-    definitionsArray.push(Blockly.JavaScript.definitions_[definitionName]);
-  }
-  dictReturn.definitions = definitionsArray.join('\n');
-
-  for (var i = 0; i < code.length; i++) {
-    if (code[i] === null || code[i] === '' || code[i] === '\n' || code[i] === ' ') {
-      continue;
-    }
-
-    code[i] = 'function _error_handler(e) {\n'+
+  Blockly.JavaScript.definitions_['definitions_common'] = 'function _error_handler(e) {\n'+
 '  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_ERROR, \'ERROR: \' + String(e)));\n'+
 '}\n'+
 'function _dispatch_message(message) {\n'+
@@ -216,8 +180,43 @@ Blockly.JavaScript.finish = function(code) {
 '        break;\n'+
 '    }\n'+
 '  }\n'+
-'}\n'+
-'onmessage = function (e) {\n'+
+'}\n';
+};
+
+/**
+ * Prepare and return code dictionary.
+ * @param {string} code Generated code.
+ * @return {dictionary} Code and code components.
+ */
+Blockly.JavaScript.finish = function(code) {
+  var implementationTopLevelBlocksArray = [];
+  var definitionsArray = [];
+  var dictReturn = {
+    'definitions': null,
+    'implementationTopLevelBlocks': null,
+    'dictVariables': Blockly.JavaScript.dictVariables_
+  };
+
+  if (code.length < 1) {
+    // Clean up temporary data.
+    delete Blockly.JavaScript.definitions_;
+    delete Blockly.JavaScript.functionNames_;
+    Blockly.JavaScript.variableDB_.reset();
+
+    return dictReturn;
+  }
+
+  for (var definitionName in Blockly.JavaScript.definitions_) {
+    definitionsArray.push(Blockly.JavaScript.definitions_[definitionName]);
+  }
+  dictReturn.definitions = definitionsArray.join('\n');
+
+  for (var i = 0; i < code.length; i++) {
+    if (code[i] === null || code[i] === '' || code[i] === '\n' || code[i] === ' ') {
+      continue;
+    }
+
+    code[i] = 'onmessage = function (e) {\n'+
 '  _dispatch_message(e.data);\n'+
 '};\n'+
 'onerror = _error_handler;\n'+
