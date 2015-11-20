@@ -192,8 +192,8 @@ Blockly.JavaScript.finish = function(code) {
   var implementationTopLevelBlocksArray = [];
   var definitionsArray = [];
   var dictReturn = {
-    'definitions': null,
-    'implementationTopLevelBlocks': null,
+    'definitions': '',
+    'implementationTopLevelBlocks': [],
     'dictVariables': Blockly.JavaScript.dictVariables_
   };
 
@@ -203,7 +203,7 @@ Blockly.JavaScript.finish = function(code) {
     delete Blockly.JavaScript.functionNames_;
     Blockly.JavaScript.variableDB_.reset();
 
-    return dictReturn;
+    return null;
   }
 
   for (var definitionName in Blockly.JavaScript.definitions_) {
@@ -232,6 +232,7 @@ Blockly.JavaScript.finish = function(code) {
   }
 
   dictReturn.implementationTopLevelBlocks = implementationTopLevelBlocksArray;
+
   // Clean up temporary data.
   delete Blockly.JavaScript.definitions_;
   delete Blockly.JavaScript.functionNames_;
