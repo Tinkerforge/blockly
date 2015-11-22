@@ -222,7 +222,7 @@ Blockly.JavaScript.finish = function(code) {
 'onerror = _error_handler;\n'+
 'function *_main() {\n' +
 '  ' + code[i] + '\n' +
-'    postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_DONE, _codeButtonEnable));\n'+
+'  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_DONE, _codeButtonEnable));\n'+
 '}\n'+
 '_iterator_main = _main();\n';
 
