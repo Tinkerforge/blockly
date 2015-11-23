@@ -113,7 +113,7 @@ Blockly.JavaScript.init = function(workspace) {
   // Create a dictionary mapping desired function names in definitions_
   // to actual function names (to avoid collisions with user functions).
   Blockly.JavaScript.functionNames_ = Object.create(null);
-  Blockly.JavaScript.dictVariables_ = '';
+  Blockly.JavaScript.dictVariablesInit_ = 'var _dict_variables = {};\n';
 
   if (!Blockly.JavaScript.variableDB_) {
     Blockly.JavaScript.variableDB_ =
@@ -126,13 +126,11 @@ Blockly.JavaScript.init = function(workspace) {
   var dictVariables = {};
   var variables = Blockly.Variables.allVariables(workspace);
 
-  Blockly.JavaScript.dictVariables_ = 'var _dictVariables = {};\n';
-
   for (var i = 0; i < variables.length; i++) {
     var varName = String(Blockly.JavaScript.variableDB_.getName(variables[i], Blockly.Variables.NAME_TYPE));
-    defvars[i] = 'var ' + varName + ';';
-    Blockly.JavaScript.dictVariables_ = Blockly.JavaScript.dictVariables_ + '_dictVariables.' + varName + ' = null;\n';
+    Blockly.JavaScript.dictVariablesInit_ = Blockly.JavaScript.dictVariablesInit_ + '_dict_variables.' + varName + ' = null;\n';
   }
+  defvars.unshift('var _dict_variables = {};');
   defvars.unshift('var _worker_id = null;');
   defvars.unshift('var _return_value = null;');
   defvars.unshift('var _iterator_main = null;');
@@ -159,9 +157,7 @@ Blockly.JavaScript.init = function(workspace) {
 '           _codeButtonEnable = message_parsed.data.codeButtonEnable;\n'+
 '         }\n'+
 '        _worker_id = message_parsed.data.wid;\n'+
-'        for (k in message_parsed.data.dictv) {\n'+
-'          eval(k + \' = \' + JSON.stringify(message_parsed.data.dictv[k]));\n'+
-'        }\n'+
+'        _dict_variables = message_parsed.data.dictv;\n'+
 '        _iterator_main.next();\n'+
 '        postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_START_ACK, null));\n'+
 '        break;\n'+
@@ -171,7 +167,7 @@ Blockly.JavaScript.init = function(workspace) {
 '        postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_FUNCTION_TF_RETURN_ACK, null));\n'+
 '        break;\n'+
 '      case workerProtocol._TYPE_REQ_SET_VARIABLE:\n'+
-'        eval(message_parsed.data);\n'+
+'        _dict_variables = message_parsed.data;\n'+
 '        postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SET_VARIABLE_ACK, null));\n'+
 '        break;\n'+
 '      case workerProtocol._TYPE_REQ_YIELD_NEXT:\n'+
@@ -194,7 +190,7 @@ Blockly.JavaScript.finish = function(code) {
   var dictReturn = {
     'definitions': '',
     'implementationTopLevelBlocks': [],
-    'dictVariables': Blockly.JavaScript.dictVariables_
+    'dictVariablesInit': Blockly.JavaScript.dictVariablesInit_
   };
 
   if (code.length < 1) {

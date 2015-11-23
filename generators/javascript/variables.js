@@ -33,7 +33,7 @@ Blockly.JavaScript['variables_get'] = function(block) {
   // Variable getter.
   var code = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('VAR'),
       Blockly.Variables.NAME_TYPE);
-  return [code, Blockly.JavaScript.ORDER_ATOMIC];
+  return ['_dict_variables.' + code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
 Blockly.JavaScript['variables_set'] = function(block) {
@@ -43,5 +43,5 @@ Blockly.JavaScript['variables_set'] = function(block) {
   var varName = Blockly.JavaScript.variableDB_.getName(
       block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
   //return 'var ' + varName + ' = ' + argument0 + ';\n';
-  return 'postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SET_VARIABLE, \'' + varName + ' = ' + argument0 + '\')); yield 1;';
+  return '_dict_variables.' + varName + ' = ' + argument0 + '; postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SET_VARIABLE, _dict_variables));';
 };
