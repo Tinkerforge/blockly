@@ -134,7 +134,7 @@ Blockly.JavaScript.init = function(workspace) {
   defvars.unshift('var _worker_id = null;');
   defvars.unshift('var _return_value = null;');
   defvars.unshift('var _iterator_main = null;');
-  defvars.unshift('var _codeButtonEnable = false;');
+  defvars.unshift('var _code_button_enable = false;');
   Blockly.JavaScript.definitions_['variables'] = defvars.join('\n');
 
   Blockly.JavaScript.definitions_['definitions_common'] = 'function _error_handler(e) {\n'+
@@ -154,7 +154,7 @@ Blockly.JavaScript.init = function(workspace) {
 '    switch(message_parsed.type) {\n'+
 '      case workerProtocol._TYPE_REQ_SUBWORKER_START:\n'+
 '         if (\'codeButtonEnable\' in message_parsed.data) {\n'+
-'           _codeButtonEnable = message_parsed.data.codeButtonEnable;\n'+
+'           _code_button_enable = message_parsed.data.codeButtonEnable;\n'+
 '         }\n'+
 '        _worker_id = message_parsed.data.wid;\n'+
 '        _dict_variables = message_parsed.data.dictv;\n'+
@@ -218,7 +218,7 @@ Blockly.JavaScript.finish = function(code) {
 'onerror = _error_handler;\n'+
 'function *_main() {\n' +
 '  ' + code[i] + '\n' +
-'  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_DONE, _codeButtonEnable));\n'+
+'  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_DONE, _code_button_enable));\n'+
 '}\n'+
 '_iterator_main = _main();\n';
 
