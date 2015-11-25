@@ -53,14 +53,14 @@ Blockly.Trashcan.prototype.WIDTH_ = 47;
  * @type {number}
  * @private
  */
-Blockly.Trashcan.prototype.BODY_HEIGHT_ = 45;
+Blockly.Trashcan.prototype.BODY_HEIGHT_ = 44;
 
 /**
  * Height of the lid image.
  * @type {number}
  * @private
  */
-Blockly.Trashcan.prototype.LID_HEIGHT_ = 15;
+Blockly.Trashcan.prototype.LID_HEIGHT_ = 16;
 
 /**
  * Distance between trashcan and bottom edge of workspace.
@@ -179,6 +179,7 @@ Blockly.Trashcan.prototype.createDom = function() {
   this.svgLid_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
       this.workspace_.options.pathToMedia + Blockly.SPRITE.url);
 
+  Blockly.bindEvent_(this.svgGroup_, 'mouseup', this, this.click);
   this.animateLid_();
   return this.svgGroup_;
 };
@@ -281,4 +282,16 @@ Blockly.Trashcan.prototype.animateLid_ = function() {
  */
 Blockly.Trashcan.prototype.close = function() {
   this.setOpen_(false);
+};
+
+/**
+ * Inspect the contents of the trash.
+ */
+Blockly.Trashcan.prototype.click = function() {
+  var dx = this.workspace_.startScrollX - this.workspace_.scrollX;
+  var dy = this.workspace_.startScrollY - this.workspace_.scrollY;
+  if (Math.sqrt(dx * dx + dy * dy) > Blockly.DRAG_RADIUS) {
+    return;
+  }
+  console.log('TODO: Inspect trash.');
 };

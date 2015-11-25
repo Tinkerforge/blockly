@@ -76,6 +76,30 @@ class Gen_uncompressed(threading.Thread):
 
   def run(self):
     target_filename = "blockly_uncompressed.js"
+    add_dependency = []
+    base_path = calcdeps.FindClosureBasePath(self.search_paths)
+    deps = calcdeps.BuildDependenciesFromFiles(self.search_paths)
+    filenames = calcdeps.CalculateDependencies(self.search_paths,
+        [os.path.join("core", "blockly.js")])
+
+    for dep in deps:
+      if dep.filename in filenames:
+        add_dependency.append(calcdeps.GetDepsLine(dep, base_path))
+    add_dependency = "\n".join(add_dependency)
+    # Find the Blockly directory name and replace it with a JS variable.
+    # This allows blockly_uncompressed.js to be compiled on one computer and be
+    # used on another, even if the directory name differs.
+    m = re.search("[\\/]([^\\/]+)[\\/]core[\\/]blockly.js", add_dependency)
+    add_dependency = re.sub("([\\/])" + re.escape(m.group(1)) +
+        "([\\/]core[\\/])", '\\1" + dir + "\\2', add_dependency)
+
+    provides = []
+    for dep in deps:
+      if dep.filename in filenames:
+        if not dep.filename.startswith(os.pardir + os.sep):  # "../"
+          provides.extend(dep.provides)
+    provides.sort()
+
     f = open(target_filename, "w")
     f.write(HEADER)
     f.write("""
@@ -104,24 +128,7 @@ if (!this.goog) {
 // Build map of all dependencies (used and unused).
 var dir = this.BLOCKLY_DIR.match(/[^\\/]+$/)[0];
 """)
-    add_dependency = []
-    base_path = calcdeps.FindClosureBasePath(self.search_paths)
-    for dep in calcdeps.BuildDependenciesFromFiles(self.search_paths):
-      add_dependency.append(calcdeps.GetDepsLine(dep, base_path))
-    add_dependency = "\n".join(add_dependency)
-    # Find the Blockly directory name and replace it with a JS variable.
-    # This allows blockly_uncompressed.js to be compiled on one computer and be
-    # used on another, even if the directory name differs.
-    m = re.search("[\\/]([^\\/]+)[\\/]core[\\/]blockly.js", add_dependency)
-    add_dependency = re.sub("([\\/])" + re.escape(m.group(1)) +
-        "([\\/]core[\\/])", '\\1" + dir + "\\2', add_dependency)
     f.write(add_dependency + "\n")
-
-    provides = []
-    for dep in calcdeps.BuildDependenciesFromFiles(self.search_paths):
-      if not dep.filename.startswith(os.pardir + os.sep):  # "../"
-        provides.extend(dep.provides)
-    provides.sort()
     f.write("\n")
     f.write("// Load Blockly.\n")
     for provide in provides:
@@ -428,10 +435,16 @@ if __name__ == "__main__":
       print("Error: Closure directory needs to be renamed from"
             "'closure-library-read-only' to 'closure-library'.\n"
             "Please rename this directory.")
+    elif os.path.isdir(os.path.join(os.path.pardir, "google-closure-library")):
+      # When Closure is installed by npm, it is named "google-closure-library".
+      print("Error: Closure directory needs to be renamed from"
+            "'google-closure-library' to 'closure-library'.\n"
+            "Please rename this directory.")
     else:
       print("""Error: Closure not found.  Read this:
 https://developers.google.com/blockly/hacking/closure""")
     sys.exit(1)
+
   search_paths = calcdeps.ExpandDirectories(
       ["core", os.path.join(os.path.pardir, "closure-library")])
 
