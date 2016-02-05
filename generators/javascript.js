@@ -141,33 +141,28 @@ Blockly.JavaScript.init = function(workspace) {
 '  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_ERROR, \'ERROR: \' + String(e)));\n'+
 '}\n'+
 'function _dispatch_message(message) {\n'+
-'  var message_parsed = null;\n'+
-'  try {\n'+
-'    message_parsed = JSON.parse(message);\n'+
-'  }\n'+
-'  catch(e) {\n'+
-'    _error_handler(String(e));\n'+
+'  if (typeof(message) !== \'object\') {\n'+
 '    return;\n'+
 '  }\n'+
 '\n'+
-'  if (message_parsed.type !== null && workerProtocol.isNumber(message_parsed.type)) {\n'+
-'    switch(message_parsed.type) {\n'+
+'  if (message.type !== null && workerProtocol.isNumber(message.type)) {\n'+
+'    switch(message.type) {\n'+
 '      case workerProtocol._TYPE_REQ_SUBWORKER_START:\n'+
-'         if (\'codeButtonEnable\' in message_parsed.data) {\n'+
-'           _code_button_enable = message_parsed.data.codeButtonEnable;\n'+
+'         if (\'codeButtonEnable\' in message.data) {\n'+
+'           _code_button_enable = message.data.codeButtonEnable;\n'+
 '         }\n'+
-'        _worker_id = message_parsed.data.wid;\n'+
-'        _dict_variables = message_parsed.data.dictv;\n'+
+'        _worker_id = message.data.wid;\n'+
+'        _dict_variables = message.data.dictv;\n'+
 '        _iterator_main.next();\n'+
 '        postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SUBWORKER_START_ACK, null));\n'+
 '        break;\n'+
 '      case workerProtocol._TYPE_REQ_FUNCTION_TF_RETURN:\n'+
-'        _return_value = message_parsed.data;\n'+
+'        _return_value = message.data;\n'+
 '        _iterator_main.next();\n'+
 '        postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_FUNCTION_TF_RETURN_ACK, null));\n'+
 '        break;\n'+
 '      case workerProtocol._TYPE_REQ_SET_VARIABLE:\n'+
-'        _dict_variables = message_parsed.data;\n'+
+'        _dict_variables = message.data;\n'+
 '        postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SET_VARIABLE_ACK, null));\n'+
 '        break;\n'+
 '      case workerProtocol._TYPE_REQ_YIELD_NEXT:\n'+
