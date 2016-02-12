@@ -43,3 +43,25 @@ Blockly.JavaScript['tinkerforge_misc_repeat_with_interval'] = function(block) {
 
   return 'while (true) {\n' + Blockly.JavaScript.addLoopTrap(branch, block.id) + '}\n';
 };
+
+Blockly.JavaScript['tinkerforge_misc_write_output_field'] = function(block) {
+  var value_widget_output_field = Blockly.JavaScript.valueToCode(block,
+                                                                 '_WIDGET_OUTPUT_FIELD',
+                                                                 Blockly.JavaScript.ORDER_ATOMIC);
+  var value_text_widget_output_field = Blockly.JavaScript.valueToCode(block,
+                                                                      '_TEXT_WIDGET_OUTPUT_FIELD',
+                                                                      Blockly.JavaScript.ORDER_ATOMIC);
+
+  return 'postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_MESSAGE_GUI_OUTPUT_FIELD, { \'widget\':String(' + value_widget_output_field + '), \'value\':String(' + value_text_widget_output_field + ') }));\n';
+};
+
+Blockly.JavaScript['tinkerforge_misc_update_plot_widget'] = function(block) {
+  var value_widget_plot = Blockly.JavaScript.valueToCode(block,
+                                                         '_WIDGET_PLOT',
+                                                         Blockly.JavaScript.ORDER_ATOMIC);
+  var value_update_value_widget_plot = Blockly.JavaScript.valueToCode(block,
+                                                                      '_UPDATE_VALUE_WIDGET_PLOT',
+                                                                      Blockly.JavaScript.ORDER_ATOMIC);
+
+  return 'postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_MESSAGE_GUI_PLOT, { \'widget\':String(' + value_widget_plot + '), \'value\':' + value_update_value_widget_plot + ' }));\n';
+};
