@@ -34,6 +34,7 @@ Blockly.JavaScript['procedures_defreturn'] = function(block) {
   var funcName = Blockly.JavaScript.variableDB_.getName(
       block.getFieldValue('NAME'), Blockly.Procedures.NAME_TYPE);
   var branch = Blockly.JavaScript.statementToCode(block, 'STACK');
+
   if (Blockly.JavaScript.STATEMENT_PREFIX) {
     branch = Blockly.JavaScript.prefixLines(
         Blockly.JavaScript.STATEMENT_PREFIX.replace(/%1/g,
@@ -53,8 +54,19 @@ Blockly.JavaScript['procedures_defreturn'] = function(block) {
     args[x] = Blockly.JavaScript.variableDB_.getName(block.arguments_[x],
         Blockly.Variables.NAME_TYPE);
   }
-  var code = 'function *' + funcName + '(' + args.join(', ') + ') {\n' +
-      branch + returnValue + '}\n';
+
+  var code = '';
+  var fargs = '';
+
+  if(args.length) {
+    for (var x = 0; x < args.length; x++) {
+      fargs = fargs + '_dict_variables.' + args[x] + ' = ' + args[x] +
+              ';\n  postMessage(workerProtocol.getMessage(_worker_id, workerProtocol._TYPE_RES_SET_VARIABLE, _dict_variables));\n';
+    }
+  }
+
+  code = 'function *' + funcName + '(' + args.join(', ') + ') {\n' +
+         fargs + branch + returnValue + '}\n';
   code = Blockly.JavaScript.scrub_(block, code);
   Blockly.JavaScript.definitions_[funcName] = code;
   //return null;
